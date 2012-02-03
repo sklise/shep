@@ -1,9 +1,13 @@
 # Interacts with the Google Maps API.
 #
 # map me <query> - Returns a map view of the area returned by `query`.
+# feed me - Returns link to ITP Food Map (editable).
+# food (map) - Returns link to ITP Food Map (editable).
 
 module.exports = (robot) ->
-
+  # Respond with Google Food Map
+  robot.respond /(feed me|food( map)*)/i, (msg) ->
+    msg.send "http://maps.google.com/maps/ms?msid=212612765155761142119.0004b814e0a8125b6d4b0&msa=0"
   robot.respond /(?:(satellite|terrain|hybrid)[- ])?map me (.+)/i, (msg) ->
     mapType  = msg.match[1] or "roadmap"
     location = msg.match[2]
