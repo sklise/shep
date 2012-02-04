@@ -7,7 +7,11 @@
 module.exports = (robot) ->
   # Respond with Google Food Map
   robot.respond /(feed me|food( map)*)/i, (msg) ->
+    msg.send "I'm a dog, you should be feeding me #{msg.message.user.name}. Maybe at one of these places near school:"
     msg.send "http://maps.google.com/maps/ms?msid=212612765155761142119.0004b814e0a8125b6d4b0&msa=0"
+
+
+  # Google Maps queries
   robot.respond /(?:(satellite|terrain|hybrid)[- ])?map me (.+)/i, (msg) ->
     mapType  = msg.match[1] or "roadmap"
     location = msg.match[2]
