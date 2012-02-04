@@ -10,5 +10,5 @@ module.exports = (robot) ->
     cmds = robot.helpCommands()
     if msg.match[1]
       cmds = cmds.filter (cmd) -> cmd.match(new RegExp(msg.match[1]))
-    msg.send cmds.join("\n /msg #{msg.message.user.name}")
+    msg.send cmds.join("\n /msg #{msg.message.user.name} ")
 
