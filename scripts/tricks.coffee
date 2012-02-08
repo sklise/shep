@@ -3,6 +3,8 @@
 # stop the hate - everyone chill
 
 module.exports = (robot) ->
+  robot.hear /life is never neat/i, (msg) ->
+    msg.send 'Life is always bad: http://achewood.com/index.php?date=10282003'
   robot.respond /stop the hate/i, (msg) ->
     msg.send 'http://www.youtube.com/watch?v=KYfJ5GdtpEw'
   robot.respond /make [sS]pike angry/i, (msg) ->
