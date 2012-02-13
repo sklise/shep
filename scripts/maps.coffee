@@ -1,6 +1,7 @@
 # Interacts with the Google Maps API.
 #
 # map me <query> - Returns a map view of the area returned by `query`.
+# maps - List all ITP maps Shep knows about.
 # feed me - Returns link to ITP Food Map (editable) (shortcut: "food").
 # resource me - Returns an editable Google Map of parts and supply stores (shortcut: "parts").
 # beer me - Returns an editable map of good places to drink after school (shortcut: "bars").
@@ -18,7 +19,7 @@ module.exports = (robot) ->
     msg.send "http://maps.google.com/maps/ms?msid=212612765155761142119.0004b8da41b44f8656592&msa=0"
   robot.respond /list maps|maps/i, (msg) ->
     msg.send "These are the maps I know about:"
-    msg.http("http://l:9292/maps.js")
+    msg.http("http://ilc.itpirl.com/maps.js")
       .get() (err, res, body) ->
         msg.send "#{map.title} : #{map.url}" for map in JSON.parse(body).maps
 
