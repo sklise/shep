@@ -3,11 +3,14 @@
 # stop the hate - everyone chill
 
 module.exports = (robot) ->
+  
+  robot.respond /thank you$|thanks$/i, (msg) ->
+    msg.send "You're welcome, #{msg.message.user.name}"
   robot.hear /life is never neat/i, (msg) ->
     msg.send 'Life is always bad: http://achewood.com/index.php?date=10282003'
   robot.respond /stop the hate/i, (msg) ->
     msg.send 'http://www.youtube.com/watch?v=KYfJ5GdtpEw'
-  robot.respond /make [sS]pike angry/i, (msg) ->
+  robot.respond /make spike angry/i, (msg) ->
     msg.send 'http://sk-downloads.s3.amazonaws.com/angry.png'
   robot.respond /(look a cat|cat)(\!*)/i, (msg) ->
     # Huge chunks from the bundled youtube.coffee script

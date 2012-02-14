@@ -18,9 +18,9 @@ module.exports = (robot) ->
     msg.send "It's been a long day, these are good bars in the area, or for TNO."
     msg.send "http://maps.google.com/maps/ms?msid=212612765155761142119.0004b8da41b44f8656592&msa=0"
   robot.respond /list maps|maps/i, (msg) ->
-    msg.send "These are the maps I know about:"
     msg.http("http://ilc.itpirl.com/maps.js")
       .get() (err, res, body) ->
+        msg.send "These are the maps I know about:"
         msg.send "#{map.title} : #{map.url}" for map in JSON.parse(body).maps
 
   # Google Maps queries
