@@ -11,6 +11,7 @@ module.exports = (robot) ->
   robot.respond /(feed me|food( map)*)/i, (msg) ->
     msg.send "I'm a dog, you should be feeding me #{msg.message.user.name}. Maybe at one of these places near school:"
     msg.send "http://maps.google.com/maps/ms?msid=212612765155761142119.0004b814e0a8125b6d4b0&msa=0"
+    msg.send "Also, Ramen: http://maps.google.com/maps/ms?msid=216754842113290903564.0004b9302eae1eea1e701&msa=0&ll=40.734608,-73.986096&spn=0.039283,0.031843"
   robot.respond /parts|resource me/i, (msg) ->
     msg.send "Here's a map of parts/supplies stores in New York. Please add to it!"
     msg.send "http://maps.google.com/maps/ms?msid=208536369937245014825.000491f79657be48bfbbb&msa=0&ll=40.71851,-73.972664&spn=0.157168,0.15398"
