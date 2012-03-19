@@ -15,3 +15,11 @@
 - **cal me <calendar>** : link to calendars or specified calendar
 - Send chat message with contents of upcoming events when they are about to happen.
 - **schedule me <date><event>** : Parse out date & event name for an event.
+  
+## Changelog
+
+### 0.7.0 - 2012/03/19
+
+- Food, Beer, Parts maps
+- True Cause I Read It On The Internet
+- Crippled due to ITPIRL using only 1 IRC client.
