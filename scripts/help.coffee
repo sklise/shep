@@ -8,6 +8,7 @@
 module.exports = (robot) ->
   robot.respond /help\s*(.*)?$/i, (msg) ->
     cmds = robot.helpCommands()
+    msg.send "Here are the tricks I know. Say 'shep _____' so I know you're talking to me."
     if msg.match[1]
       cmds = cmds.filter (cmd) -> cmd.match(new RegExp(msg.match[1]))
     msg.send cmds.join("\n")
