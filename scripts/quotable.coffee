@@ -54,10 +54,14 @@ module.exports = (robot) ->
   # Shep tells the user what the "quotable" suite does and gives a list of
   # quotable people and ends with a random quote.
   robot.respond /quotable$/i, (msg) ->
+    adminArray = []
     adminNames = for own key, admin of robot.brain.data.admins
+      adminArray.push(admin)
       "#{admin.name}"
     response = "I'm no parrot but I'm good at remembering what ITP's faculty and admins have said.\n"
-    response += "Ask me for quotables from: #{adminNames.join(", ")}"
+    response += "Ask me for quotables from: #{adminNames.join(", ")}\n"
+    randomAdmin = msg.random(adminArray)
+    response += "#{randomAdmin.name} said: #{msg.random(randomAdmin.quotes)}"
     msg.send response
 
   #### shep <admin> said <quote>
