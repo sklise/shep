@@ -1,4 +1,4 @@
-# Sets and Gets quotes from ITP full-time faculty:
+# Sets and Gets quotes from ITP faculty:
 # idea from David Nolen.
 #
 # quotable - see list of quotable people and a random quote
