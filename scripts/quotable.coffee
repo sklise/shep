@@ -91,9 +91,36 @@ module.exports = (robot) ->
       admin = admins[0]
       msg.send msg.random(admin.quotes)
 
+  #### shep quotable <admin> bomb <n>
+  # Bombs with up to 15 quotes and if <n> is unspecified, 5.
+  robot.respond /quotable ([\w-]+) bomb ?([0-9]{0,2})/i, (msg) ->
+    count = if (msg.match[2] > 15) then 15 else (msg.match[2] || 5)
+    name = msg.match[1]
+
+    admins = matchedAdminsForFuzzyName(name)
+    if admins.length == 1
+      admin = admins[0]
+      count = parseInt(if count > admin.quotes.length then admin.quotes.length else count) + 1
+      results = []
+
+      # While count !=0, decrement count.
+      while count -= 1
+        # Grab some random quote
+        quote = msg.random(admin.quotes)
+        # If the chosen quote is already in results, choose another and keep
+        # doing so until that isn't the case.
+        while quote in results
+          quote = msg.random(admin.quotes)
+        # We made it, now add the quote to the results array.
+        results.push quote
+        true
+      msg.send results.join("\n")
+    else if admins.length > 1
+      msg.send getAmbiguousUserText(admins)
+    else
+      msg.send "Sorry, I couldn't find a quotable person named #{name}."
+
   #### TODO:
   # 
-  # shep quotable bomb => N random quotes
-  # shep quotable <admin> bomb => N random quotes from <admin>
   # shep quotable <admin> all => build urls that list all quotes.
   # shep <admin> did not say <quote> => remove a quote
