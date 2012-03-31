@@ -35,6 +35,8 @@ module.exports = (robot) ->
       robot.brain.data.admins ||= {}
       admin = new Admin msg.match[1]
       robot.brain.data.admins[admin.name] = admin
+    else
+      msg.send "Sorry doggy, you don't have the power for that."
 
   #### shep rm quotable <admin>
   # Remove an admin from storage
@@ -48,6 +50,8 @@ module.exports = (robot) ->
         admin = admins[0]
         if (delete robot.brain.data.admins[admin.name]) == true
           msg.send "#{admin.name} deleted successfully"
+    else
+      msg.send "Sorry doggy, you don't have the power for that."
       
 
   #### shep quotable
