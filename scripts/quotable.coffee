@@ -1,5 +1,5 @@
 # Sets and Gets quotes from ITP faculty:
-# idea from David Nolen.
+# idea from David Nolen & insipired by http://thequotabledano.com/
 #
 # quotable - see list of quotable people and a random quote
 # quotable <admin> - see a random quote from <admin>
@@ -68,7 +68,7 @@ module.exports = (robot) ->
   # Add <quote> to <admin>'s quote list.
   robot.respond /([\w-]+) said (.+)$/i, (msg) ->
     name = msg.match[1]
-    quote = msg.match[2]
+    quote = msg.match[2].trim()
     
     admins = matchedAdminsForFuzzyName(name)
     if admins.length == 1
@@ -76,6 +76,28 @@ module.exports = (robot) ->
       admin.quotes.push(quote)
       msg.send "Ok, #{admin.name} has said: #{quote}"
       msg.send "As well as #{admin.quotes.length - 1} other things."
+    else if admins.length > 1
+      msg.send getAmbiguousUserText(admins)
+    else
+      msg.send "Sorry, I couldn't find a quotable person named #{name}."
+
+  #### shep <admin> did not say <quote>
+  # Remove <quote> from <admin>'s quote list.
+  # Must use the exact quote, I'm not going to worry about partial matches.
+  robot.respond /([\w-]+) did not say ?(.+)$/i, (msg) ->
+    name = msg.match[1]
+    badQuote = msg.match[2].trim()
+    
+    admins = matchedAdminsForFuzzyName(name)
+    if admins.length == 1
+      admin = admins[0]
+      admin.quotes = admin.quotes or []
+      
+      if badQuote not in quotes
+        msg.send "I know."
+      else
+        admin.quotes = (quote for quote in admin.quotes when quote isnt badQuote)
+        msg.send "Ok, #{admin} did not say #{badQuote}"
     else if admins.length > 1
       msg.send getAmbiguousUserText(admins)
     else
@@ -90,6 +112,10 @@ module.exports = (robot) ->
     if admins.length == 1
       admin = admins[0]
       msg.send msg.random(admin.quotes)
+    else if admins.length > 1
+      msg.send getAmbiguousUserText(admins)
+    else
+      msg.send "Sorry, I couldn't find a quotable person named #{name}."
 
   #### shep quotable <admin> bomb <n>
   # Bombs with up to 15 quotes and if <n> is unspecified, 5.
@@ -112,7 +138,7 @@ module.exports = (robot) ->
         while quote in results
           quote = msg.random(admin.quotes)
         # We made it, now add the quote to the results array.
-        results.push quote
+        results.push "#{admin.name} said: #{quote}"
         true
       msg.send results.join("\n")
     else if admins.length > 1
@@ -123,4 +149,3 @@ module.exports = (robot) ->
   #### TODO:
   # 
   # shep quotable <admin> all => build urls that list all quotes.
-  # shep <admin> did not say <quote> => remove a quote
