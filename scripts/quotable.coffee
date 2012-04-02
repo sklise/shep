@@ -113,12 +113,14 @@ module.exports = (robot) ->
     name = msg.match[1]
     admins = matchedAdminsForFuzzyName(name)
     
-    msg.send "#{name}, #{admins}"
-    
     if admins.length == 1
+      msg.send "1 match"
       admin = admins[0]
-      msg.send msg.random(admin.quotes)
+      msg.send "#{admin}"
+      response = msg.random(admin.quotes)
+      msg.send response
     else if admins.length > 1
+      msg.send "many matches"
       msg.send getAmbiguousUserText(admins)
     else
       msg.send "Sorry, I couldn't find a quotable person named #{name}."
