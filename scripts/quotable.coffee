@@ -110,6 +110,7 @@ module.exports = (robot) ->
   #### shep quotable <admin>
   # Responds with a random quote from <admin>.
   robot.respond /quotable ([\w-]+)$/i, (msg) ->
+    msg.send "hi"
     name = msg.match[1]
     admins = matchedAdminsForFuzzyName(name)
     
