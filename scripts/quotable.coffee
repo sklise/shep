@@ -116,9 +116,9 @@ module.exports = (robot) ->
     if admins.length == 1
       msg.send "1 match"
       admin = admins[0]
-      msg.send "#{admin}"
+      msg.send "#{admin.quotes}"
       response = msg.random(admin.quotes)
-      msg.send response
+      msg.send "#{response}"
     else if admins.length > 1
       msg.send "many matches"
       msg.send getAmbiguousUserText(admins)
