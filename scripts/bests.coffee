@@ -14,6 +14,8 @@ class Bests
       if @robot.brain.data.bests
         # And then set the cache accordingly.
         @cache = @robot.brain.data.bests
+      else
+        @robot.brain.data.bests = {}
 
   #### createThing
   # Creates a thing with `name` and parses `arguments[1]` with fallbacks.
@@ -149,7 +151,6 @@ class Bests
         response = "Sorry but ITP tends thinks that #{theBestThing.name} is better."
     callback(response)
 
-
   #### addBest
   # Takes a user, category and thing and creates a Best if it doesn't exist
   # and adds the user's name to the list of supporters.
@@ -191,12 +192,6 @@ module.exports = (robot) ->
   formatTime = (unixtime) ->
     d = new Date(unixtime)
     "#{d.toDateString()}"
-
-  robot.hear /no bests/i, (msg) ->
-    robot.brain.data.bests = {}
-
-  robot.hear /test thing/i, (msg) ->
-    robot.brain.data.bests['cupcake shop']['234234'] = {id: Date.now(), name:'Magnolia', becameBest:0, supporters:['Hank']}
 
   #### Make `<thing>` the best `<category>`
   # Creates `<thing>` and `<category>` if they don't exist. Adds msg.message.user
