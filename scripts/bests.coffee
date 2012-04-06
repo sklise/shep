@@ -212,6 +212,12 @@ module.exports = (robot) ->
       bests.addBest msg.message.user, category, thing, (response) ->
         msg.send response
 
+  robot.respond /all bests/i, (msg) ->
+    for category, things of robot.brain.data.bests
+      theBest = bests.getTheBest(things)
+      msg.send "#{theBest.name} is the best #{category} since #{formatTime(theBest.becameBest)}"
+      true
+
   robot.respond /best (.*)$/i, (msg) ->
     categoryName = msg.match[1].trim()
     categories = bests.matchedCategoriesForFuzzyCategory(categoryName)
@@ -228,5 +234,4 @@ module.exports = (robot) ->
       msg.send "No one has said a word about a best #{categoryName}."
 
 ## TODO:
-# all bests
 # just alright <category>
