@@ -118,7 +118,7 @@ module.exports = (robot) ->
       if admin.quotes.length == 0
         msg.send "No one has told me any quotes from #{admin.name}! Tell me one like this: shep #{admin.name} said ______"
       else
-        msg.send msg.random(admin.quotes)
+        msg.send "#{admin.name} said: #{msg.random(admin.quotes)}"
     else if admins.length > 1
       msg.send getAmbiguousUserText(admins)
     else
