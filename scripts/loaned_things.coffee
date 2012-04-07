@@ -52,7 +52,9 @@ class Things
     true
   # remove a thing from the robot's brain
   remove: (thing, owner) ->
-    "removed"
+    delete @cache[thing.id]
+    @robot.brain.data.things = @cache
+    true
   # create an unloaned thing.
   create: (thing, owner) ->
     createdAt = Date.now()
@@ -164,7 +166,7 @@ module.exports = (robot) ->
       else
         msg.send "It seems you've"
   #### create a thing for yourself. So people can later try and borrow it.
-  robot.respond /i have a?n? ?(.*)/i, (msg) ->
+  robot.respond /i have a?n? ?(.*)$/i, (msg) ->
     thing = msg.match[1]
     owner = msg.message.user
 
@@ -173,6 +175,22 @@ module.exports = (robot) ->
     else
       msg.send "Something inexplicable happened..."
     msg.send everything.listAllMyThings(owner)
+
+  #### remove a thing from your inventory
+  robot.respond /i do not have a?n? ?(.*)$/i, (msg) ->
+    rawThing = msg.match[1]
+    owner = msg.message.user
+
+    thingMatches = everything.myThingsLikeThis(owner, rawThing)
+
+    if thingMatches.length is 0
+      msg.send "I know."
+    else if thingMatches.length is 1
+      thing = thingMatches[0]
+      everything.remove(thing, owner)
+      msg.send "Ok, you no longer have #{thing.name}"
+    else
+      msg.send everything.getAmbiguousThingText(thingMatches)
 
   #### give a list of every thing an owner has noting who it is loaned to
   robot.respond /all my things/i, (msg) ->
