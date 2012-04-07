@@ -190,7 +190,7 @@ module.exports = (robot) ->
       msg.send "Here are the things you are borrowing: #{(thing.name + ' from ' + thing.owner.name for thing in borrowedThings).join(", ")}"
 
   #### who has a `<thing>`?
-  robot.respond /who has a (.+)\?*$/i, (msg) ->
+  robot.respond /who has a?n? ?(.+)\?*$/i, (msg) ->
     rawThing = msg.match[1]
 
     thingMatches = everything.thingsLikeThis(rawThing)
@@ -198,7 +198,7 @@ module.exports = (robot) ->
     if thingMatches.length is 0
       msg.send "I haven't been told about any things like that."
     else
-      msg.send "The following people have things like that: #{(thing.owner.name for thing in thingMatches).join(", ")}"
+      msg.send "The following people have things like that: #{(thing.owner.name + ' (' + thing.name + ')' for thing in thingMatches).join(", ")}"
 
   #### who has my `<thing>`?
   robot.respond /who has my (.+)\?*$/i, (msg) ->
