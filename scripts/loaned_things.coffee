@@ -83,16 +83,22 @@ class Things
       "#{thing.name}#{loaned}"
     "All Your Things: #{inventory.join(', ')}"
 
-  myThingsLikeThis: (owner, thingName) ->
-    myThings = @getAllMyThings owner
+  allThings: ->
+    thing for key, thing of @cache
+
+  thingsLikeThis: (thingName, things=@allThings()) ->
     matches = []
     reg = new RegExp(thingName, "i")
-    for thing in myThings
+    for thing in things
       match = thing.name.match(reg)
       if match?
         matches.push thing
       true
     matches
+
+  myThingsLikeThis: (owner, thingName) ->
+    myThings = @getAllMyThings owner
+    @thingsLikeThis(thingName, myThings)
 
   getAmbiguousThingText: (things) ->
     "Be more specific, you've got #{things.length} things named like that: #{(thing.name for thing in things).join(", ")}"
@@ -183,8 +189,19 @@ module.exports = (robot) ->
     else
       msg.send "Here are the things you are borrowing: #{(thing.name + ' from ' + thing.owner.name for thing in borrowedThings).join(", ")}"
 
+  #### who has a `<thing>`?
+  robot.respond /who has a (.+)\?*$/i, (msg) ->
+    rawThing = msg.match[1]
+
+    thingMatches = everything.thingsLikeThis(rawThing)
+
+    if thingMatches.length is 0
+      msg.send "I haven't been told about any things like that."
+    else
+      msg.send "The following people have things like that: #{(thing.owner.name for thing in thingMatches).join(", ")}"
+
   #### who has my `<thing>`?
-  robot.respond /who has my (.+)\?*/i, (msg) ->
+  robot.respond /who has my (.+)\?*$/i, (msg) ->
     owner = msg.message.user
     rawThing = msg.match[1]
 
@@ -204,6 +221,3 @@ module.exports = (robot) ->
 
 ## TODO:
 # Ask follow up questions and respond to them using conversation.coffee.
-# Can someone say they borrowed another's thing? I don't think they should be 
-# able to. Because then you can just go around borrowing all kinds of things
-# and also saying you returned a thing when you did not really.
