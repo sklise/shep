@@ -1,22 +1,15 @@
 # Shep
-
-## Scripts
-
-### Maps
-
-#### Respond with shared/editable Google Maps for where to obtain things:
-
-- **feed me | food** : restauraunt/snack places
-- **resource me | stores** : parts and suppliers
-
-### Calendars
-
-- **today** : list of calendar events happening today.
-- **cal me <calendar>** : link to calendars or specified calendar
-- Send chat message with contents of upcoming events when they are about to happen.
-- **schedule me <date><event>** : Parse out date & event name for an event.
   
 ## Changelog
+
+### 0.8.0 - 2012/04/07
+
+- Use MTA status script from hubot-scripts
+- Shep can now track what you have and what you have loaned
+- Shep keeps track of quotable sayings from faculty and staff.
+- Shep keeps track of the best things according to ITP.
+- Bring Roles.coffee back.
+- Bugfixes
 
 ### 0.7.0 - 2012/03/19
 
