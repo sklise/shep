@@ -164,7 +164,7 @@ module.exports = (robot) ->
       else
         msg.send "It seems you've"
   #### create a thing for yourself. So people can later try and borrow it.
-  robot.respond /i have a[n]? (.*)/i, (msg) ->
+  robot.respond /i have a?n? ?(.*)/i, (msg) ->
     thing = msg.match[1]
     owner = msg.message.user
 
