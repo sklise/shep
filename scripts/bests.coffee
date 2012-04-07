@@ -189,7 +189,7 @@ module.exports = (robot) ->
   # Create a bests instance.
   bests = new Bests robot
 
-  formatTime = (unixtime) ->
+  robot.formatTime = (unixtime) ->
     d = new Date(unixtime)
     "#{d.toDateString()}"
 
@@ -215,7 +215,7 @@ module.exports = (robot) ->
   robot.respond /all bests/i, (msg) ->
     for category, things of robot.brain.data.bests
       theBest = bests.getTheBest(things)
-      msg.send "#{theBest.name} is the best #{category} since #{formatTime(theBest.becameBest)}"
+      msg.send "#{theBest.name} is the best #{category} since #{robot.formatTime(theBest.becameBest)}"
       true
 
   robot.respond /best (.*)$/i, (msg) ->
@@ -227,7 +227,7 @@ module.exports = (robot) ->
       categoryName = categories[0]
       category = bests.getCategoryFromName(categoryName)
       theBest = bests.getTheBest(category)
-      msg.send "#{theBest.name} is the best #{categoryName} as of #{formatTime(theBest.becameBest)}"
+      msg.send "#{theBest.name} is the best #{categoryName} as of #{robot.formatTime(theBest.becameBest)}"
     else if categories.length > 1
       msg.send bests.getAmbiguousText(categories)
     else
