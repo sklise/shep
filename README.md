@@ -2,6 +2,10 @@
   
 ## Changelog
 
+### 0.8.1 - 2012/04/07
+
+- Add method descriptions for Bests and LoanedThings
+
 ### 0.8.0 - 2012/04/07
 
 - Use MTA status script from hubot-scripts

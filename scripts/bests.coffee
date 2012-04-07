@@ -1,6 +1,10 @@
 ## Bests
 # Tracks the best things (places, software, dishes, whatever) according to ITP.
 
+# make <thing> the best <category> - Add your name as a supporter of <thing> in <category>
+# all bests - Get a list of the best <thing> of every <category>
+# best <category> - Get what the best <thing> is of this <category>
+
 #### Bests
 # Based on karma.coffee from hubot-scripts.
 class Bests
