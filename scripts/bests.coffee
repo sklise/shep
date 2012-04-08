@@ -4,6 +4,7 @@
 # make <thing> the best <category> - Add your name as a supporter of <thing> in <category>
 # all bests - Get a list of the best <thing> of every <category>
 # best <category> - Get what the best <thing> is of this <category>
+# good <category> - Get all of the <thing>s in <category>
 
 # **Using a modified TomDoc that replaces dashes with colons to prevent
 # internal documentation from appearing in Hubot Help results.**
@@ -77,6 +78,14 @@ class Bests
   # Returns an array of category name strings.
   getAllCategories: ->
     category for category, things of @cache
+
+  # Gets a list of all things from the category
+  #
+  # categoryName  : A string that is definitely a key in @cache
+  #
+  # Returns an array of thing objects
+  getAllThingsFromCategory: (categoryName) ->
+    thing for key, thing of @cache[categoryName]
 
   # Gets a `category` object matching the given name.
   #
@@ -283,6 +292,25 @@ module.exports = (robot) ->
       category = bests.getCategoryFromName(categoryName)
       theBest = bests.getTheBest(category)
       msg.send "#{theBest.name} is the best #{categoryName} as of #{robot.formatTime(theBest.becameBest)}"
+    # Show the standard text for too many results.
+    else if categories.length > 1
+      msg.send bests.getAmbiguousText(categories)
+    # That category doesn't exist.
+    else
+      msg.send "No one has said a word about a best #{categoryName}."
+
+  # Public: Sends a list of the names of all the things in the category if the
+  # category exists, otherwise sends a message saying the category was not
+  # found.
+  robot.respond /good (.*)$/i, (msg) ->
+    categoryName = msg.match[1].trim()
+    categories = bests.matchedCategoriesForFuzzyCategory(categoryName)
+
+    if categories.length is 1
+      categoryName = categories[0]
+      category = bests.getCategoryFromName(categoryName)
+      allThings = bests.getAllThingsFromCategory(categoryName)
+      msg.send "Here are all the things ITP thinks are good #{categoryName}: #{(thing.name for thing in allThings).join(", ")}"
     # Show the standard text for too many results.
     else if categories.length > 1
       msg.send bests.getAmbiguousText(categories)
