@@ -200,29 +200,34 @@ class Bests
         response = "Sorry but ITP tends thinks that #{theBestThing.name} is better."
     callback(response)
 
-  #### addBest
-  # Takes a user, category and thing and creates a Best if it doesn't exist
+  # Takes a user, category and thing and creates a Thing if it doesn't exist
   # and adds the user's name to the list of supporters.
-  addBest: (user, category, thing, callback) ->
+  #
+  # user          : the user object from msg.message
+  # categoryName  : A string that might match a current category
+  # thingName     : A string that might match a current thing
+  # callback      : Callback function to send a message of the response.
+  #
+  # Returns the callback method with response text.
+  addBest: (user, categoryName, thingName, callback) ->
     response = ""
-    categories = @matchedCategoriesForFuzzyCategory(category)
+    categories = @matchedCategoriesForFuzzyCategory(categoryName)
 
     # Found exactly 1 matching category
     if categories.length == 1
       category = categories[0]
       # Delegate work to another function to keep things a bit shorter.
-      @createThingOrAddSupporter category, thing, user, (whatHappened) ->
+      @createThingOrAddSupporter category, thingName, user, (whatHappened) ->
         response = whatHappened
     # No matches, create new category
     else if categories.length == 0
       # Create the thing. Since this is a new category set `becameBest` to the
       # current time.
-      thing = @createThing thing, {becameBest: Date.now(), supporters: [user.name]}
-
-      @addThingToCategory category, thing
-
+      thing = @createThing thingName, {becameBest: Date.now(), supporters: [user.name]}
+      # Add the thing to this new category
+      @addThingToCategory categoryName, thing
       # Make the user feel real special.
-      response = "You're the first person to think there is a best #{category}, so we all agree that #{thing} is teh best."
+      response = "You're the first person to think there is a best #{categoryName}, so we all agree that #{thing.name} is teh best."
     # Too many matches, tell the user.
     else
       response = @getAmbiguousText(categories)
