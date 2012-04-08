@@ -5,13 +5,16 @@
 # all bests - Get a list of the best <thing> of every <category>
 # best <category> - Get what the best <thing> is of this <category>
 
+# **Using a modified TomDoc that replaces dashes with colons to prevent
+# internal documentation from appearing in Hubot Help results.**
+
 #### Bests
 # Based on karma.coffee from hubot-scripts.
 class Bests
   constructor: (@robot) ->
     # Initialize an empty cache
     @cache = {}
-    
+
     # Trigger when Hubot has loaded its brain
     @robot.brain.on 'loaded', =>
       # Check to see if there already are some things
@@ -21,8 +24,29 @@ class Bests
       else
         @robot.brain.data.bests = {}
 
-  #### createThing
+  # Takes a thing object and adds it to the specified category. Saves the cache
+  # to the robot's brain. Ensures that the category object exists.
+  #
+  # categoryName  : 
+  # thing         : 
+  #
+  # Returns true
+  addThingToCategory: (categoryName, thing) ->
+    @cache[categoryName] ?= {}
+    @cache[categoryName][thing.id] = thing
+    @robot.brain.data.bests = @cache
+    true
+
   # Creates a thing with `name` and parses `arguments[1]` with fallbacks.
+  #
+  # name    : Required string for a name of the thing.
+  # args    : Object of optional values for the thing.
+  #           id          : Unix time used as an id. Defaults to Date.now()
+  #           becameBest  : The Unix time at which point this thing became the
+  #                         best in its containin category. Default is 0.
+  #           supporters  : Array of user name strings. Default is empty array.
+  #
+  # Returns a thing object
   createThing: (name) ->
     args = arguments[1] || {}
     {
@@ -48,12 +72,28 @@ class Bests
       return [category] if category.toLowerCase() is fuzzyCategory.toLowerCase()
     matchedCategories
 
+  # Gets a list of all category names.
+  # 
+  # Returns an array of category name strings.
+  getAllCategories: ->
+    category for category, things of @cache
+
+  # Gets a `category` object matching the given name.
+  #
+  # categoryName  : a string corresponding to a key of `robot.brain.data.bests`
+  #
+  # Returns a `category` object.
   getCategoryFromName: (categoryName) ->
     @robot.brain.data.bests[categoryName]
 
-  #### getTheBest(category)
-  # Pass in a category object and figure out what the best is and return its
-  # name and becameBest time.
+  # Gets the `thing` with the most supporters inside the given `category`. In
+  # the event of a tie in the supporters count, the `thing` with the largest
+  # `becameBest` value is chosen.
+  #
+  # category  : A category object from `robot.brain.data.bests`. This object
+  #             is a set of `things` without a reference to the category name.
+  #
+  # Returns the `thing` object inside of `category`.
   getTheBest: (category) ->
     # Keep track of the maximum number of supporters seen and what that thing
     # was that had the most supporters.
@@ -75,17 +115,15 @@ class Bests
 
     theBest
 
-  #### createThingOrAddSupporter
-
   createThingOrAddSupporter: (categoryName, rawThing, user, callback) ->
     response = ""
-    category = @robot.brain.data.bests[categoryName]
-    things = for own key, thing of category
+    category = @getCategoryFromName categoryName
+    thingNames = for own key, thing of category
       thing.name.toLowerCase()
 
     # This thing already exists, so add the user's name to the list of
     # supporters. And count the number of things.
-    if rawThing.toLowerCase() in things
+    if rawThing.toLowerCase() in thingNames
       # Empty array for matches (there should only be one)
       thingMatch = []
 
@@ -128,11 +166,9 @@ class Bests
     # Add a new thing. Most of the time there will be another thing in this
     # category but check just to make sure.
     else
-      createdAt = Date.now()
-      category[createdAt] = @createThing rawThing,
-        id:createdAt
-        becameBest:0
-        supporters:[user.name]
+      thing = @createThing rawThing, {supporters:[user.name]}
+      @addThingToCategory categoryName, thing
+
       count = 0
       categoryHasASupporter = false
 
@@ -145,7 +181,7 @@ class Bests
       # If there is not a single supporter in this category or no other things
       # make this new thing the best.
       if !categoryHasASupporter || count = 0
-        category[createdAt]['becameBest'] = createdAt
+        category[thing.id]['becameBest'] = Date.now()
         response = "#{categoryHasASupporter} Oh rad, you've just made #{rawThing} the best #{categoryName}."
       # Otherwise tell them whatever thing is better is better.
       # TODO: Will this break? If there's nothing else in the category then
@@ -158,7 +194,6 @@ class Bests
   #### addBest
   # Takes a user, category and thing and creates a Best if it doesn't exist
   # and adds the user's name to the list of supporters.
-
   addBest: (user, category, thing, callback) ->
     response = ""
     categories = @matchedCategoriesForFuzzyCategory(category)
@@ -171,15 +206,11 @@ class Bests
         response = whatHappened
     # No matches, create new category
     else if categories.length == 0
-      @robot.brain.data.bests[category] = {}
-      thingId = Date.now()
-
       # Create the thing. Since this is a new category set `becameBest` to the
       # current time.
-      @robot.brain.data.bests[category][thingId] = @createThing thing, 
-        id:thingId
-        becameBest:thingId
-        supporters:[user.name]
+      thing = @createThing thing, {becameBest: Date.now(), supporters: [user.name]}
+
+      @addThingToCategory category, thing
 
       # Make the user feel real special.
       response = "You're the first person to think there is a best #{category}, so we all agree that #{thing} is teh best."
@@ -193,15 +224,25 @@ module.exports = (robot) ->
   # Create a bests instance.
   bests = new Bests robot
 
+  # Public: Turns a Unix time integer into a string of the date. Scoped to the
+  # robot.
+  #
+  # unixtime : a unix time integer
+  #
+  # Returns a date string including the day of the week and year with no time.
   robot.formatTime = (unixtime) ->
     d = new Date(unixtime)
     "#{d.toDateString()}"
 
-  #### Make `<thing>` the best `<category>`
-  # Creates `<thing>` and `<category>` if they don't exist. Adds msg.message.user
-  # as a supporter or tells the user they already support the `<thing>`. Finally
-  # tally up the supporters of every thing and tell the user which is really
-  # "the best."
+  # Add the message sender as a supporter to `thing` in the specified category.
+  # Creates the thing and category if htey don't exist. If this action makes
+  # the thing the best of the category, update `thing.becameBest`. Finally tell
+  # everyone the result.
+  #
+  # <thing>     : a string of a thing name to add a supporter to or create.
+  # <category>  : a string of a category name to find or create.
+  #
+  # Returns nothing.
   robot.respond /make (.+) the best(.*)$/i, (msg) ->
     # Get `<thing>` and `<category>` with no edge white space.
     thing = msg.match[1].trim()
@@ -216,12 +257,22 @@ module.exports = (robot) ->
       bests.addBest msg.message.user, category, thing, (response) ->
         msg.send response
 
+  # Public: Send messages saying what the best thing is for each category.
+  #
+  # Returns nothing
   robot.respond /all bests/i, (msg) ->
     for category, things of robot.brain.data.bests
       theBest = bests.getTheBest(things)
       msg.send "#{theBest.name} is the best #{category} since #{robot.formatTime(theBest.becameBest)}"
       true
 
+  # Public: Sends a message saying what the best thing is of the given category
+  # if the category exists otherwise sends a message saying the category was
+  # not found.
+  #
+  # <categoryName>  : a string that might be a key for `@cache`
+  #
+  # Returns nothing
   robot.respond /best (.*)$/i, (msg) ->
     categoryName = msg.match[1].trim()
     categories = bests.matchedCategoriesForFuzzyCategory(categoryName)
@@ -232,8 +283,10 @@ module.exports = (robot) ->
       category = bests.getCategoryFromName(categoryName)
       theBest = bests.getTheBest(category)
       msg.send "#{theBest.name} is the best #{categoryName} as of #{robot.formatTime(theBest.becameBest)}"
+    # Show the standard text for too many results.
     else if categories.length > 1
       msg.send bests.getAmbiguousText(categories)
+    # That category doesn't exist.
     else
       msg.send "No one has said a word about a best #{categoryName}."
 
