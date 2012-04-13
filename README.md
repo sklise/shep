@@ -1,5 +1,9 @@
 # Shep
-  
+
+![](http://itp-shep.s3.amazonaws.com/shep.png)
+
+A chat bot for ITP built on [Hubot](http://hubot.github.com) and illustrated by [Joe Kloc](http://joekloc.com).
+
 ## Changelog
 
 ### 0.8.1 - 2012/04/07
