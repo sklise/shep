@@ -1,7 +1,7 @@
 # ITP Thesis Week info script
-
+#
 # whos next - who is presenting next
-# 
+#
 
 days = [
   'sunday',
@@ -22,7 +22,7 @@ module.exports = (robot) ->
   #   output = Util.inspect(robot.brain.data.thesisweek[date.getFullYear()], false, 4)
   #   msg.send output
   robot.respond /who\'?s next/i, (msg) ->
-    date = new Date
+    date = (new Date)-4*6000
     day = days[date.getDay()]
     minutes = date.getMinutes()
     hours = date.getHours()
