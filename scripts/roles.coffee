@@ -12,7 +12,7 @@ module.exports = (robot) ->
   robot.respond /who is @?([\w .-]+)\?*$/i, (msg) ->
     name = msg.match[1]
 
-    if name is "you"
+    if name.toLowerCase() is "you"
       msg.send "Who ain't I?"
     else if name is robot.name
       msg.send "The best."
