@@ -1,1 +1,1 @@
-["redis-brain.coffee", "ackbar.coffee", "haters.coffee", "mta.coffee"]
+["redis-brain.coffee", "ackbar.coffee", "haters.coffee", "mta.coffee", "keep-alive.coffee"]

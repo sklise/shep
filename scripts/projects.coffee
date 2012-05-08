@@ -34,7 +34,7 @@ class Projects
       (https?://)?                          # http is optional
       ([a-zA-Z0-9-_\.]+)                    # non-top-level domains
       \.
-      (com|net|org|edu|ch|co|gd|in|ly|se)   # top-level domain
+      (com|net|org|edu|ch|co|gd|in|info|ly|se|)   # top-level domain
       ([0-9a-zA-Z\/=+\-_:]+)?               # path
     ///
     url = rawString.match(urlRegex)
