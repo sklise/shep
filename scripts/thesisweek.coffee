@@ -22,10 +22,10 @@ module.exports = (robot) ->
   #   output = Util.inspect(robot.brain.data.thesisweek[date.getFullYear()], false, 4)
   #   msg.send output
   robot.respond /who\'?s next/i, (msg) ->
-    date = (new Date)-4*6000
+    date = (new Date)
     day = days[date.getDay()]
     minutes = date.getMinutes()
-    hours = date.getHours()
+    hours = date.getHours() - 4
 
     timenum = hours*100+minutes
 
