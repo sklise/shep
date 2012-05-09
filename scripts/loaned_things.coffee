@@ -3,7 +3,7 @@
 # Shep can keep track of all the loaned things.
 # Who did I loan X to? Did PERSON return X?
 # idea from a Google Spreadsheet started by Saraswathi
-
+#
 # i have a(n) <thing> - Adds <thing> to your inventory
 # i do not have a(n) <thing> - Remove <thing> from your inventory
 # loan <user> my <thing> - Loans <thing> to <user> and saves the current time.
@@ -12,6 +12,7 @@
 # who has my <thing>? - See if your <thing> is on loan and to whom.
 # all my things - get a list of everything you have that Shep knows about
 # what have i borrowed? - What things does Shep know you are borrowing?
+#
 
 ## THING
 # {
