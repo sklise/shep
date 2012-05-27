@@ -1,3 +1,4 @@
+scripts/storage.coffee
 .env
 node_modules
 .DS_Store*
