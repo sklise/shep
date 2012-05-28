@@ -35,9 +35,11 @@ otherwise keep Shep running nice and smooth.
 
 ## Changelog
 
-### 1.0.0
+### 1.0.0 - 2012/??/??
 
-- Merge 2 patches from Jedahan
+- Rebuild quotes to include non-staff.
+- Save timestamps with quotes.
+- Merge 2 patches to make Shep respond more fuzzily.
 - Additional documentation.
 - Thesis Week script
 
