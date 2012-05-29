@@ -150,7 +150,7 @@ module.exports = (robot) ->
   robot.respond /add quotable ([\w-]+)$/i, (msg) ->
     if msg.message.user.name == process.env.ADMIN_USER && process.env.ADMIN_USER != 'undefined'
       robot.brain.data['quotable:staff'] ||= {}
-      admin = {name:msg.match[1], quotes:[]}
+      admin = {name:msg.match[1], quotes:{}}
       robot.brain.data['quotable:staff'][admin.name] = admin
     else
       msg.send "Sorry doggy, you don't have the power for that."
