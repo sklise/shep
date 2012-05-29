@@ -2,11 +2,38 @@
 # idea from David Nolen & inspired by http://thequotabledano.com/
 #
 # quotable - see list of quotable people and a random quote
-# quotable <person> - see a random quote from <person>
+# quotable <person|year> - see a random quote from <person> or <year> (2012 = 2011-2012 school year)
 # <person> said <quote> - add <quote> to <person>'s list of quotes.
 # <person> did not say <quote> - remove <quote> from <person>'s list of quotes.
 
 module.exports = (robot) ->
+  getSchoolYear = ->
+    date = new Date
+    # September...
+    if date.getMonth() < 9
+      date.getFullYear()
+    else
+      date.getFullYear() + 1
+
+  getSchoolYearStart = (year) ->
+    Date.parse("9-1-#{year-1}")
+
+  getRandomQuote = (msg, quoteObject, since=0) ->
+    # Staff quotes
+    if quoteObject.quotes?
+      quotes = for id, quote of quoteObject.quotes
+        quote
+      chosen = msg.random(quotes)
+      "#{quoteObject.name} said: #{chosen.quote} (#{robot.formatTime chosen.id})"
+    # Recent Quotes
+    else
+      quotes = for id, value of quoteObject when (value.id >= getSchoolYearStart(since) && value.id < getSchoolYearStart(since+1))
+        value
+      if quotes.length is 0
+        return "No one said anything in #{since}."
+      chosen = msg.random(quotes)
+      "#{chosen.person} said: #{chosen.quote} (#{robot.formatTime chosen.id})"
+
   getAmbiguousUserText = (users) ->
     "Be more specific, I know #{users.length} people named like that: #{(user.name for user in users).join(", ")}"
 
@@ -20,41 +47,61 @@ module.exports = (robot) ->
     for admin in matchedAdmins
       return [admin] if admin.name.toLowerCase() is fuzzyName.toLowerCase()
     matchedAdmins
-
-  robot.respond /add quotable ([\w-]+)$/i, (msg) ->
-    if msg.message.user.name == process.env.ADMIN_USER && process.env.ADMIN_USER != 'undefined'
-      robot.brain.data['quotable:staff'] ||= {}
-      admin = {name:msg.match[1], quotes:[]}
-      robot.brain.data['quotable:staff'][admin.name] = admin
-    else
-      msg.send "Sorry doggy, you don't have the power for that."
-
-  robot.respond /rm quotable ([\w]+)$/i, (msg) ->
-    name = msg.match[1]
-    if msg.message.user.name == process.env.ADMIN_USER && process.env.ADMIN_USER != 'undefined'
-      robot.brain.data['quotable:staff'] ||= {}
-      admins = matchedAdminsForFuzzyName(name)
-      if admins.length == 1
-        admin = admins[0]
-        if (delete robot.brain.data['quotable:staff'][admin.name]) == true
-          msg.send "#{admin.name} deleted successfully"
-    else
-      msg.send "Sorry doggy, you don't have the power for that."
       
   robot.respond /quotable$/i, (msg) ->
-    adminArray = []
-    adminNames = for own name, admin of robot.brain.data['quotable:staff']
-      adminArray.push({name:admin.name,quotes:admin.quotes})
-      "#{name}"
+    [adminArray, adminNames] = [[], []]
+    for own name, admin of robot.brain.data['quotable:staff']
+      adminArray.push {name:admin.name,quotes:admin.quotes}
+      adminNames.push "#{name}"
     response = "I'm no parrot but I'm good at remembering what ITP's faculty and admins have said.\n"
     response += "Ask me for quotables from: #{adminNames.join(", ")}\n"
-    randomAdmin = msg.random(adminArray)
-    response += "#{randomAdmin.name} said: #{randomAdmin.quotes}"
+    response += getRandomQuote(msg, msg.random(adminArray))
     msg.send response
 
-  # <person> said <quote>
-  # Matches <person> to a registered quotable person or saves quote as an
-  # object with key value of the timestamp.
+  robot.respond /quotable ([\w-]+)$/i, (msg) ->
+    name = msg.match[1]
+    admins = matchedAdminsForFuzzyName(name)
+    
+    if admins.length == 1
+      admin = admins[0]
+      if admin.quotes.length == 0
+        msg.send "No one has told me any quotes from #{admin.name}! Tell me one like this: shep #{admin.name} said ______"
+      else
+        msg.send getRandomQuote(msg, admin)
+    else if admins.length > 1
+      msg.send getAmbiguousUserText(admins)
+    else
+      since = (parseInt(name) || getSchoolYear())
+      msg.send getRandomQuote(msg, robot.brain.data['quotable:people'], since)
+      # msg.send "Sorry, I couldn't find a quotable person named #{name}."
+
+  robot.respond /quotable ([\w-]+) bomb ?([0-9]{0,2})/i, (msg) ->
+    count = if (msg.match[2] > 15) then 15 else (msg.match[2] || 5)
+    name = msg.match[1]
+
+    admins = matchedAdminsForFuzzyName(name)
+    if admins.length == 1
+      admin = admins[0]
+      count = parseInt(if count > admin.quotes.length then admin.quotes.length else count) + 1
+      results = []
+
+      # While count !=0, decrement count.
+      while count -= 1
+        # Grab some random quote
+        quote = msg.random(admin.quotes)
+        # If the chosen quote is already in results, choose another and keep
+        # doing so until that isn't the case.
+        while quote in results
+          quote = msg.random(admin.quotes)
+        # We made it, now add the quote to the results array.
+        results.push "#{admin.name} said: #{quote}"
+        true
+      msg.send results.join("\n")
+    else if admins.length > 1
+      msg.send getAmbiguousUserText(admins)
+    else
+      msg.send "Sorry, I couldn't find a quotable person named #{name}."
+
   robot.respond /([\w-]+) said (.+)$/i, (msg) ->
     name = msg.match[1]
     quote = msg.match[2].trim()
@@ -101,54 +148,22 @@ module.exports = (robot) ->
     else
       msg.send "Sorry, I couldn't find a quotable person named #{name}."
 
-  #### shep quotable <admin>
-  # Responds with a random quote from <admin>.
-  robot.respond /quotable ([\w-]+)$/i, (msg) ->
-    name = msg.match[1]
-    admins = matchedAdminsForFuzzyName(name)
-    
-    if admins.length == 1
-      admin = admins[0]
-      if admin.quotes.length == 0
-        msg.send "No one has told me any quotes from #{admin.name}! Tell me one like this: shep #{admin.name} said ______"
-      else
-        quotes = for id, quote of admin.quotes
-          quote
-        msg.send "#{admin.name} said: #{msg.random(quotes).quote}"
-    else if admins.length > 1
-      msg.send getAmbiguousUserText(admins)
+  robot.respond /add quotable ([\w-]+)$/i, (msg) ->
+    if msg.message.user.name == process.env.ADMIN_USER && process.env.ADMIN_USER != 'undefined'
+      robot.brain.data['quotable:staff'] ||= {}
+      admin = {name:msg.match[1], quotes:[]}
+      robot.brain.data['quotable:staff'][admin.name] = admin
     else
-      msg.send "Sorry, I couldn't find a quotable person named #{name}."
+      msg.send "Sorry doggy, you don't have the power for that."
 
-  #### shep quotable <admin> bomb <n>
-  # Bombs with up to 15 quotes and if <n> is unspecified, 5.
-  robot.respond /quotable ([\w-]+) bomb ?([0-9]{0,2})/i, (msg) ->
-    count = if (msg.match[2] > 15) then 15 else (msg.match[2] || 5)
+  robot.respond /rm quotable ([\w]+)$/i, (msg) ->
     name = msg.match[1]
-
-    admins = matchedAdminsForFuzzyName(name)
-    if admins.length == 1
-      admin = admins[0]
-      count = parseInt(if count > admin.quotes.length then admin.quotes.length else count) + 1
-      results = []
-
-      # While count !=0, decrement count.
-      while count -= 1
-        # Grab some random quote
-        quote = msg.random(admin.quotes)
-        # If the chosen quote is already in results, choose another and keep
-        # doing so until that isn't the case.
-        while quote in results
-          quote = msg.random(admin.quotes)
-        # We made it, now add the quote to the results array.
-        results.push "#{admin.name} said: #{quote}"
-        true
-      msg.send results.join("\n")
-    else if admins.length > 1
-      msg.send getAmbiguousUserText(admins)
+    if msg.message.user.name == process.env.ADMIN_USER && process.env.ADMIN_USER != 'undefined'
+      robot.brain.data['quotable:staff'] ||= {}
+      admins = matchedAdminsForFuzzyName(name)
+      if admins.length == 1
+        admin = admins[0]
+        if (delete robot.brain.data['quotable:staff'][admin.name]) == true
+          msg.send "#{admin.name} deleted successfully"
     else
-      msg.send "Sorry, I couldn't find a quotable person named #{name}."
-
-  #### TODO:
-  # 
-  # shep quotable <admin> all => build urls that list all quotes.
+      msg.send "Sorry doggy, you don't have the power for that."
