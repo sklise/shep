@@ -135,13 +135,13 @@ module.exports = (robot) ->
     admins = matchedAdminsForFuzzyName(name)
     if admins.length == 1
       admin = admins[0]
-      admin.quotes = admin.quotes or []
-      
-      if badQuote not in quotes
-        msg.send "I know."
-      else
-        admin.quotes = (quote for quote in admin.quotes when quote isnt badQuote)
-        msg.send "Ok, #{admin} did not say #{badQuote}"
+
+      for id, value of admin.quotes
+        if value.quote is badQuote
+          delete admin.quotes[id]
+          msg.send "Ok, #{admin.name} did not say #{badQuote}"
+          return
+      msg.send "I know."
     else if admins.length > 1
       msg.send getAmbiguousUserText(admins)
     else
