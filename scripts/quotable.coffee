@@ -114,7 +114,6 @@ module.exports = (robot) ->
       time = (new Date).getTime()
       admin.quotes[time] = {id:time, quote:quote}
       msg.send "Ok, #{admin.name} has said: #{quote}"
-      msg.send "As well as #{admin.quotes.length - 1} other things."
     # Too many matches, tell the user the possible names.
     else if admins.length > 1
       msg.send getAmbiguousUserText(admins)
