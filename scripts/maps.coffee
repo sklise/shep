@@ -1,10 +1,12 @@
-# Interacts with the Google Maps API.
+# Description:
+#   Interacts with the Google Maps API.
 #
-# map me <query> - Returns a map view of the area returned by `query`.
-# maps - List all ITP maps Shep knows about.
-# feed me - Returns link to ITP Food Map (editable) (shortcut: "food").
-# resource me - Returns an editable Google Map of parts and supply stores (shortcut: "parts").
-# beer me - Returns an editable map of good places to drink after school (shortcut: "bars").
+# Commands:
+#   map me <query> - Returns a map view of the area returned by `query`.
+#   maps - List all ITP maps Shep knows about.
+#   feed me - Returns link to ITP Food Map (editable) (shortcut: "food").
+#   resource me - Returns an editable Google Map of parts and supply stores (shortcut: "parts").
+#   beer me - Returns an editable map of good places to drink after school (shortcut: "bars").
 
 module.exports = (robot) ->
   # Respond with Google Food Map

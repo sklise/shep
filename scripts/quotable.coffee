@@ -1,10 +1,12 @@
-# Sets and Gets quotes from ITP faculty & students:
-# idea from David Nolen & inspired by http://thequotabledano.com/
+# Description:
+#   Sets and Gets quotes from ITP faculty & students:
+#   idea from David Nolen & inspired by http://thequotabledano.com/
 #
-# quotable - see list of quotable people and a random quote
-# quotable <person|year> - see a random quote from <person> or <year> (2012 = 2011-2012 school year)
-# <person> said <quote> - add <quote> to <person>'s list of quotes.
-# <person> did not say <quote> - remove <quote> from <person>'s list of quotes.
+# Commands:
+#   quotable - see list of quotable people and a random quote
+#   quotable <person|year> - see a random quote from <person> or <year> (2012 = 2011-2012 school year)
+#   <person> said <quote> - add <quote> to <person>'s list of quotes.
+#   <person> did not say <quote> - remove <quote> from <person>'s list of quotes.
 
 module.exports = (robot) ->
   getSchoolYear = ->
@@ -47,7 +49,7 @@ module.exports = (robot) ->
     for admin in matchedAdmins
       return [admin] if admin.name.toLowerCase() is fuzzyName.toLowerCase()
     matchedAdmins
-      
+
   robot.respond /quotable$/i, (msg) ->
     [adminArray, adminNames] = [[], []]
     for own name, admin of robot.brain.data['quotable:staff']
@@ -61,7 +63,7 @@ module.exports = (robot) ->
   robot.respond /quotable ([\w-]+)$/i, (msg) ->
     name = msg.match[1]
     admins = matchedAdminsForFuzzyName(name)
-    
+
     if admins.length == 1
       admin = admins[0]
       if admin.quotes.length == 0
@@ -131,7 +133,7 @@ module.exports = (robot) ->
   robot.respond /([\w-]+) did not say ?(.+)$/i, (msg) ->
     name = msg.match[1]
     badQuote = msg.match[2].trim()
-    
+
     admins = matchedAdminsForFuzzyName(name)
     if admins.length == 1
       admin = admins[0]

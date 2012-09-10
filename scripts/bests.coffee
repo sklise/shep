@@ -1,13 +1,14 @@
-## Bests
-# Tracks the best things (places, software, dishes, whatever) according to ITP.
+# Description:
+#  Tracks the best things (places, software, dishes, whatever) according to ITP.
 
-# make <thing> the best <category> - Add your name as a supporter of <thing> in <category>
-# all bests - Get a list of the best <thing> of every <category>
-# best <category> - Get what the best <thing> is of this <category>
-# good <category> - Get all of the <thing>s in <category>
-
-# **Using a modified TomDoc that replaces dashes with colons to prevent
-# internal documentation from appearing in Hubot Help results.**
+# Commands:
+#   make <thing> the best <category> - Add your name as a supporter of <thing> in <category>
+#   all bests - Get a list of the best <thing> of every <category>
+#   best <category> - Get what the best <thing> is of this <category>
+#   good <category> - Get all of the <thing>s in <category>
+#
+# Author:
+#   Steve Klise
 
 #### Bests
 # Based on karma.coffee from hubot-scripts.
@@ -28,8 +29,8 @@ class Bests
   # Takes a thing object and adds it to the specified category. Saves the cache
   # to the robot's brain. Ensures that the category object exists.
   #
-  # categoryName  : 
-  # thing         : 
+  # categoryName  :
+  # thing         :
   #
   # Returns true
   addThingToCategory: (categoryName, thing) ->
@@ -74,7 +75,7 @@ class Bests
     matchedCategories
 
   # Gets a list of all category names.
-  # 
+  #
   # Returns an array of category name strings.
   getAllCategories: ->
     category for category, things of @cache

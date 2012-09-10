@@ -1,14 +1,16 @@
-## Projects, or URLs I'm Working On
+# Description:
+#   Projects, or URLs I'm Working On
+#
+# Commands:
+#   i made <url> - add a url for a thing you made.
+#   i did not make <url> - Remove a url from your list of urls
+#   i am making <url> - Submit a url to a thing you are working on
+#   i finished <url> - Change a url for a thing from working on to completed.
 
-# i made <url> - add a url for a thing you made.
-# i did not make <url> - Remove a url from your list of urls
-# i am making <url> - Submit a url to a thing you are working on
-# i finished <url> - Change a url for a thing from working on to completed.
-
-# made this week - Get a list of what people at ITP have made this week.
-# making this week - Get a list of what people are working on this week
-# what <user> made - Returns just the things that the given user made
-# what <user> is making - Returns just the things the given user is making.
+#   made this week - Get a list of what people at ITP have made this week.
+#   making this week - Get a list of what people are working on this week
+#   what <user> made - Returns just the things that the given user made
+#   what <user> is making - Returns just the things the given user is making.
 
 #### Projects
 class Projects
