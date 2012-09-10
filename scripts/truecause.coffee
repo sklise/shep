@@ -1,6 +1,8 @@
-# Take arguments and make them a true thing on the internet
-# 
-# make true <string> - Add statement to a url on true-cause-i-read-it-on-the-internet.net
+# Description:
+#   Take arguments and make them a true thing on the internet
+#
+# Commands:
+#   make true <string> - Add statement to a url on true-cause-i-read-it-on-the-internet.net
 
 module.exports = (robot) ->
   robot.respond /make true (.+)/i, (msg) ->

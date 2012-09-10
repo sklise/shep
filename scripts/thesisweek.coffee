@@ -1,6 +1,8 @@
-# ITP Thesis Week info script
+# Description:
+#   ITP Thesis Week info script
 #
-# whos next - who is presenting next
+# Commands:
+#   whos next - who is presenting next
 #
 
 days = [
@@ -18,7 +20,7 @@ Util = require "util"
 module.exports = (robot) ->
   # robot.respond /thesis week/i, (msg) ->
   #   date = new Date
-  #   
+  #
   #   output = Util.inspect(robot.brain.data.thesisweek[date.getFullYear()], false, 4)
   #   msg.send output
   robot.respond /who\'?s next/i, (msg) ->

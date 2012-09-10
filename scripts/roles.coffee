@@ -1,8 +1,10 @@
-# Assign roles to people you're chatting with
-# 
-# <user> is a badass guitarist - assign a role to a user
-# <user> is not a badass guitarist - remove a role from a user
-# who is <user> - see what roles a user has
+# Description:
+#   Assign roles to people you're chatting with
+#
+# Commands:
+#   <user> is a badass guitarist - assign a role to a user
+#   <user> is not a badass guitarist - remove a role from a user
+#   who is <user> - see what roles a user has
 
 module.exports = (robot) ->
 
