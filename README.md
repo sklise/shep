@@ -35,7 +35,13 @@ otherwise keep Shep running nice and smooth.
 
 ## Changelog
 
-### 1.0.0 - 2012/??/??
+### 1.0.1 - 2012/9/11
+
+- switch to Node.js 0.8.x and latest builds of Hubot etc.
+- added 'play' support
+- give me love
+
+### 1.0.0
 
 - Rebuild quotes to include non-staff.
 - Save timestamps with quotes.
