@@ -8,7 +8,7 @@
 #   good <category> - Get all of the <thing>s in <category>
 #
 # Author:
-#   Steve Klise
+#   stevenklise
 
 #### Bests
 # Based on karma.coffee from hubot-scripts.
