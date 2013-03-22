@@ -1,1 +1,1 @@
-app: bin/hubot -a irc -n Shep --alias shep
+app: bin/hubot -a rest -n Shep --alias /
