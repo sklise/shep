@@ -1,9 +1,8 @@
 {
-  "name":        "hosted-hubot",
+  "name":        "shep",
   "version":     "0.2.0",
   "author":      "GitHub Inc.",
-  "keywords":    "github hubot campfire bot",
-  "description": "A simple helpful Robot for your Company",
+  "keywords":    "github hubot bot itp",
   "licenses":     [{
     "type":       "MIT",
     "url":        "http://github.com/github/hubot/raw/master/LICENSE"
@@ -14,14 +13,14 @@
   },
   "repository" : {
     "type" : "git",
-    "url" : "http://github.com/github/hubot.git"
+    "url" : "http://github.com/itpnyu/shep.git"
   },
 
   "dependencies": {
     "hubot": "2.4.8",
     "hubot-scripts": "2.4.2",
     "optparse": "1.0.3",
-    "hubot-rest": "0.0.2"
+    "hubot-rest": "latest"
   }
 }
 
