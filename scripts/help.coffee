@@ -1,4 +1,4 @@
-# Description:
+# Description: 
 #   Generates help commands for Hubot.
 #
 # Commands:
@@ -54,8 +54,6 @@ module.exports = (robot) ->
   robot.respond /help\s*(.*)?$/i, (msg) ->
     cmds = robot.helpCommands()
 
-    msg.send "Here are the tricks I know. Say 'shep _____' so I know you're talking to me."
-
     if msg.match[1]
       cmds = cmds.filter (cmd) ->
         cmd.match new RegExp(msg.match[1], 'i')
@@ -68,7 +66,9 @@ module.exports = (robot) ->
     msg.send emit
 
   robot.router.get '/hubot/help', (req, res) ->
-    cmds = robot.helpCommands()
+    cmds = robot.helpCommands().map (cmd) ->
+      cmd.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+
     emit = "<p>#{cmds.join '</p><p>'}</p>"
 
     emit = emit.replace /hubot/ig, "<b>#{robot.name}</b>"
