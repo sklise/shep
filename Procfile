@@ -1,1 +1,1 @@
-web: bin/hubot -a rest -n Shep --alias /
+web: bin/hubot -a web -n Shep --alias /
