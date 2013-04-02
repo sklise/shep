@@ -128,7 +128,7 @@ module.exports = (robot) ->
     owner = msg.message.user
     name = msg.match[1]
 
-    names = robot.usersForFuzzyName(name)
+    names = robot.brain.usersForFuzzyName(name)
     thingMatches = everything.myThingsLikeThis(owner, rawThing)
 
     # See if the owner only has one matching thing, do this.
