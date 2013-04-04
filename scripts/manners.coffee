@@ -9,7 +9,10 @@
 #   stevenklise
 
 module.exports = (robot) ->
-  robot.hear /^(hi|hello|hey)( shep)?/i, (msg) ->
-    msg.send "Hi #{msg.message.user.name}"
+  robot.hear /^(hi|hello|hey) ?([a-zA-Z0-9]+)?/i, (msg) ->
+    recipient = msg.message.user.name
+    recipient = msg.match[2] if msg.match[2]? and msg.match[2] isnt "shep"
+    msg.send "Hi #{recipient}"
+
   robot.respond /thank you$|thanks$/i, (msg) ->
     msg.send "You're welcome, #{msg.message.user.name}"
