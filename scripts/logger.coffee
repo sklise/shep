@@ -1,6 +1,6 @@
 module.exports = (robot) ->
   robot.hear /.*/i, (msg) ->
-    data = {user: "shep", project: "thesis2013", user: msg.message.user, content: msg.message.text, timestamp: Date.now()}
+    data = {user: "shep", project: "thesis2013", chat_user: msg.message.user, content: msg.message.text, timestamp: Date.now()}
     console.log(msg.message)
     msg.http('http://www.itpcakemix.com')
       .path("/add")
