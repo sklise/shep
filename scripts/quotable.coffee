@@ -128,7 +128,7 @@ module.exports = (robot) ->
         person: name
         quote: quote
       msg.send "#{name}'s quote is saved as a generic quote."
-      msg.send "OK, #{name} said #{quote} on #{now.getMonth()}/#{now.getDate()}/#{now.getFullYear()}."
+      msg.send "OK, #{name} said #{quote} on #{now.getMonth()+1}/#{now.getDate()}/#{now.getFullYear()}."
 
   robot.respond /([\w-]+) did not say ?(.+)$/i, (msg) ->
     name = msg.match[1]
