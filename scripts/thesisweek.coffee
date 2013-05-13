@@ -15,6 +15,7 @@ days = [
   'saturday'
 ]
 
+und = require "underscore"
 Util = require "util"
 
 module.exports = (robot) ->
@@ -27,29 +28,44 @@ module.exports = (robot) ->
     date = (new Date)
     day = days[date.getDay()]
     minutes = date.getMinutes()
-    hours = date.getHours() - 4
+    hours = date.getHours()
 
     timenum = hours*100+minutes
 
-    today = robot.brain.data.thesisweek[date.getFullYear()]['schedule'][day]
+    msg.http('http://itp-thesis.s3.amazonaws.com/2013/schedule.json')
+      .get() (err, res, body) ->
+        sched = JSON.parse(body)
+        time = (new Date)
+        d = time.getDate()
+        h = time.getHours()
+        m = time.getMinutes()
 
-    presentationTimes = []
-    for own time, pres of today
-      presentationTimes.push parseInt(time)
+        x = und.filter sched, (thing) ->
+          timesplit = thing.time.split(":")
+          thing.date is d and (h < timesplit[0] or (h <= timesplit[0] and m <= timesplit[1]))
+        sorted = und.sortBy x, (thing) ->
+          thing.time
+        match = sorted[0]
+        msg.send "#{match.student} is next at #{match.time}."
 
-    upcoming = []
-    upcoming.push(time) for time in presentationTimes when time > timenum
 
-    # No time will be greater than this
-    min = 2400
-    min = time for time in upcoming when time < min
+    # presentationTimes = []
+    # for own time, pres of today
+    #   presentationTimes.push parseInt(time)
 
-    finalHour = Math.floor(min/100)
-    finalMinutes = min%100
+    # upcoming = []
+    # upcoming.push(time) for time in presentationTimes when time > timenum
 
-    if finalHour > 12
-      finalHour = finalHour - 12
-    if finalMinutes < 10
-      finalMinutes = "0#{finalMinutes}"
+    # # No time will be greater than this
+    # min = 2400
+    # min = time for time in upcoming when time < min
 
-    msg.send "#{today[min]['name']} is presenting at #{finalHour}:#{finalMinutes}. Thesis URL: #{today[min]['url']}"
+    # finalHour = Math.floor(min/100)
+    # finalMinutes = min%100
+
+    # if finalHour > 12
+    #   finalHour = finalHour - 12
+    # if finalMinutes < 10
+    #   finalMinutes = "0#{finalMinutes}"
+
+    # msg.send "#{today[min]['name']} is presenting at #{finalHour}:#{finalMinutes}. Thesis URL: #{today[min]['url']}"
