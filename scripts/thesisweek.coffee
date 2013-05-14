@@ -9,13 +9,6 @@ und = require "underscore"
 
 module.exports = (robot) ->
   robot.respond /who\'?s next/i, (msg) ->
-    date = (new Date)
-    day = days[date.getDay()]
-    minutes = date.getMinutes()
-    hours = date.getHours()
-
-    timenum = hours*100+minutes
-
     msg.http('http://itp-thesis.s3.amazonaws.com/2013/schedule.json')
       .get() (err, res, body) ->
         sched = JSON.parse(body)
