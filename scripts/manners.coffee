@@ -2,8 +2,8 @@
 #   Basic manners to make Shep more pleasant to talk to.
 #
 # Commands:
-#   hi|hello|hey shep - teach Shep to say hi
-#   shep thank you - Make Shep say you're welcome
+#   hubot thank you - Make Shep say you're welcome
+#   hubot emoji - Return the link to the emoji cheatsheet.
 #
 # Author:
 #   stevenklise
@@ -15,7 +15,7 @@ module.exports = (robot) ->
   robot.hear /^(hi|hello|hey)($| )([a-zA-Z0-9]+)?/i, (msg) ->
     recipient = msg.message.user.name
     recipient = msg.match[3] if msg.match[3]? and msg.match[3] isnt "shep"
-    msg.send "Hi #{recipient}"
+    msg.send "Hi #{recipient}!"
 
   robot.respond /thank you$|thanks$/i, (msg) ->
     msg.send "You're welcome, #{msg.message.user.name}"
