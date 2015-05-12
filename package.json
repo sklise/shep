@@ -1,7 +1,6 @@
 {
   "name": "shep",
-  "version": "0.2.0",
-  "author": "GitHub Inc.",
+  "version": "1.0.0",
   "keywords": "github hubot bot itp",
   "licenses": [
     {
@@ -15,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/itpnyu/shep.git"
+    "url": "http://github.com/sklise/shep.git"
   },
   "dependencies": {
     "hubot": "2.4.8",
     "hubot-scripts": "2.4.2",
-    "optparse": "1.0.3",
-    "underscore": "",
+    "hubot-web": "^0.1.0",
     "moment": "",
+    "optparse": "1.0.3",
     "string": "",
-    "hubot-slack": "^3.3.0"
+    "underscore": ""
   }
 }
